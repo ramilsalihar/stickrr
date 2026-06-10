@@ -1,0 +1,258 @@
+/* ============================================================
+   STICKRR DESIGN SYSTEM  ·  v1.0
+   A toy that happens to make money.
+   Sticker-aesthetic: die-cut outlines, peelable shadows,
+   chunky rounded type, hot-coral energy.
+   ------------------------------------------------------------
+   Token names are STABLE. Build everything from these.
+   ============================================================ */
+
+:root {
+  /* ---- CORE PALETTE ---------------------------------------- */
+  --ink: #14110F;          /* near-black, text + outlines        */
+  --ink-soft: #4A4441;     /* muted body text                    */
+  --paper: #FFFFFF;        /* die-cut outline + cards            */
+  --cream: #FFF6F2;        /* warm off-white page base           */
+
+  /* ---- BRAND (dominant) ------------------------------------ */
+  --coral: #FF4D4D;        /* THE color. Hot coral.              */
+  --coral-deep: #D62F3D;   /* pressed / hard-shadow under coral  */
+  --coral-tint: #FFE3DD;   /* faint coral wash for fills         */
+
+  /* ---- STICKER POPS (multicolor toy accents) --------------- */
+  --pop-yellow: #FFD23F;
+  --pop-sky:    #4DA6FF;
+  --pop-mint:   #2BD9A8;
+  --pop-grape:  #9B6DFF;
+  --pop-bubble: #FF8FD0;
+
+  /* primary semantic alias — swapped by Tweaks */
+  --brand: var(--coral);
+  --brand-deep: var(--coral-deep);
+
+  /* ---- TYPE ------------------------------------------------- */
+  --font-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               Helvetica, Arial, sans-serif;
+
+  /* fluid type scale (mobile-first → up) */
+  --t-hero:    clamp(2.3rem, 7vw, 3.6rem);     /* display hero    */
+  --t-display: clamp(2.1rem, 7.5vw, 3.75rem);  /* section titles  */
+  --t-title:   clamp(1.5rem, 5vw, 2.25rem);    /* card titles     */
+  --t-lead:    clamp(1.05rem, 3.4vw, 1.4rem);  /* sub / lead      */
+  --t-body:    clamp(1rem, 2.6vw, 1.125rem);
+  --t-small:   0.875rem;
+  --t-tiny:    0.75rem;
+
+  --lh-tight: 0.95;
+  --lh-snug: 1.1;
+  --lh-body: 1.5;
+
+  /* ---- SPACING (4px base) ---------------------------------- */
+  --s-1: 0.25rem;  --s-2: 0.5rem;  --s-3: 0.75rem; --s-4: 1rem;
+  --s-5: 1.5rem;   --s-6: 2rem;    --s-8: 3rem;    --s-10: 4rem;
+  --s-12: 6rem;    --s-16: 8rem;
+
+  /* section rhythm */
+  --section-y: clamp(3.5rem, 9vw, 7rem);
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+  --maxw: 1180px;
+
+  /* ---- RADII ----------------------------------------------- */
+  --r-sticker: 28px;   /* die-cut cards            */
+  --r-card: 22px;
+  --r-chip: 999px;     /* pills / badges           */
+  --r-blob: 42% 58% 56% 44% / 52% 44% 56% 48%; /* organic sticker blob */
+
+  /* ---- DIE-CUT + PEEL EFFECTS ------------------------------ */
+  --outline: 6px;                 /* white sticker border width */
+  --outline-thin: 4px;
+  /* peelable lift — soft shadow that reads as "lifting off page" */
+  --peel-shadow: 0 10px 18px rgba(20,17,15,0.18), 0 2px 4px rgba(20,17,15,0.12);
+  --peel-shadow-lg: 0 22px 40px rgba(20,17,15,0.22), 0 6px 12px rgba(20,17,15,0.14);
+  /* hard offset shadow — chunky toy buttons */
+  --hard-shadow: 5px 5px 0 var(--ink);
+  --hard-shadow-brand: 5px 5px 0 var(--brand-deep);
+
+  /* ---- MOTION ---------------------------------------------- */
+  --motion: 1;  /* multiplier, set to 0 by Tweaks to kill motion */
+  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* sticker rotation amount — Tweakable */
+  --tilt: 1;
+}
+
+/* ============================================================
+   RESET-ish
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: var(--lh-tight);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+p { margin: 0; }
+img, svg { display: block; max-width: 100%; }
+button { font-family: inherit; cursor: pointer; }
+a { color: inherit; }
+
+/* ============================================================
+   LAYOUT HELPERS
+   ============================================================ */
+.ds-wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+.ds-section { padding-block: var(--section-y); position: relative; }
+
+/* ============================================================
+   STICKER PRIMITIVE  ·  .sticker
+   Thick white die-cut outline + peelable shadow + tilt.
+   Apply .sticker to any block to make it look peelable.
+   ============================================================ */
+.sticker {
+  --r: var(--tilt-deg, 0deg);
+  position: relative;
+  background: var(--paper);
+  border: var(--outline) solid var(--paper);
+  border-radius: var(--r-sticker);
+  box-shadow: var(--peel-shadow);
+  transform: rotate(calc(var(--r) * var(--tilt)));
+  transition: transform 0.35s var(--bounce), box-shadow 0.35s var(--ease);
+  outline: 1px solid rgba(20,17,15,0.06); /* hairline so white reads on white */
+}
+.sticker--lg { box-shadow: var(--peel-shadow-lg); }
+
+/* hover wobble — gated through --motion so Tweaks can disable */
+@media (hover: hover) {
+  .sticker:hover {
+    transform: rotate(calc(var(--r) * var(--tilt)))
+               translateY(calc(-6px * var(--motion)));
+    box-shadow: var(--peel-shadow-lg);
+    animation: wobble calc(0.6s / (var(--motion) + 0.001)) var(--ease);
+  }
+}
+@keyframes wobble {
+  0%   { rotate: 0deg; }
+  25%  { rotate: calc(-3deg * var(--motion)); }
+  50%  { rotate: calc(2.4deg * var(--motion)); }
+  75%  { rotate: calc(-1.4deg * var(--motion)); }
+  100% { rotate: 0deg; }
+}
+
+/* preset tilts — set --tilt-deg on element */
+.tilt-l   { --tilt-deg: -3deg; }
+.tilt-l2  { --tilt-deg: -6deg; }
+.tilt-r   { --tilt-deg:  3deg; }
+.tilt-r2  { --tilt-deg:  6deg; }
+
+/* ============================================================
+   BUTTONS  ·  chunky toy buttons with hard offset shadow
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--s-2);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--t-body);
+  line-height: 1;
+  padding: 0.95em 1.5em;
+  border-radius: var(--r-chip);
+  border: 3px solid var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.12s var(--ease), box-shadow 0.12s var(--ease), background 0.2s;
+  user-select: none;
+}
+.btn--primary {
+  background: var(--brand);
+  color: var(--paper);
+  box-shadow: var(--hard-shadow);
+}
+.btn--ink {
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 5px 5px 0 var(--brand);
+}
+.btn--ghost {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--hard-shadow);
+}
+.btn:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 var(--ink);
+}
+.btn--lg { font-size: var(--t-lead); padding: 1.05em 1.8em; }
+
+/* ============================================================
+   BADGES / PILLS
+   ============================================================ */
+.pill {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--t-small);
+  padding: 0.4em 0.9em;
+  border-radius: var(--r-chip);
+  border: 3px solid var(--ink);
+  background: var(--paper);
+  line-height: 1;
+  white-space: nowrap;
+}
+.pill--brand { background: var(--brand); color: var(--paper); }
+.pill--yellow { background: var(--pop-yellow); }
+.pill--live { background: var(--ink); color: var(--paper); }
+
+/* live dot */
+.live-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--pop-mint);
+  box-shadow: 0 0 0 0 var(--pop-mint);
+  animation: pulse calc(1.6s / (var(--motion) + 0.001)) infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(43,217,168,0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(43,217,168,0); }
+  100% { box-shadow: 0 0 0 0 rgba(43,217,168,0); }
+}
+
+/* ============================================================
+   ENTRANCE ANIMATIONS (bounce in on reveal)
+   add .reveal; toggle [data-in] when in view
+   ============================================================ */
+.reveal { opacity: 0; transform: translateY(24px) scale(0.96); }
+.reveal[data-in] {
+  opacity: 1; transform: none;
+  transition: opacity 0.5s var(--ease), transform 0.6s var(--bounce);
+}
+
+/* ============================================================
+   MOTION OFF — Tweaks sets data-motion="off" on <html>
+   plus respect user preference
+   ============================================================ */
+html[data-motion="off"] { --motion: 0; }
+html[data-motion="off"] *,
+html[data-motion="off"] *::before,
+html[data-motion="off"] *::after {
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
